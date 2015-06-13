@@ -20,12 +20,19 @@ fs.truncate(outputFile, 0)
 // init variables
 var linesLengths = [];
 var runningMedian = 0;
+var content;
+var deferred = Q.defer();
 
 Q.all(getInputFiles(inputFolder).map(function(file) {
     //console.log(file);
-    fs.readFileSync(inputFolder + "/" + file).toString().split('\n').forEach(
+    fs.readFile(inputFolder + "/" + file, function read(err, data) {
+	if (err) {
+        	deferred.reject(new Error(error));
+    	}
+    	content = data;
+        content.toString().split('\n').forEach(
         function (line) {
-         
+        
           var words = line
               .replace(/[.,?{}!$*\/\\\[\]~;():#"'-]/g, " ") // replace special characters
               .replace(/\s+/g, " ") // normalize white space
@@ -45,11 +52,10 @@ Q.all(getInputFiles(inputFolder).map(function(file) {
           	});
 	  };
         });
-      return 'Running Median task complete.';
+    });
 }))
-.done(function (result) {
+.then(function (result) {
     // Done
-    console.log(result[0]);
 
 });
 

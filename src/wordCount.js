@@ -60,6 +60,5 @@ Q.all(getInputFiles(inputFolder).map(function(file) {
 	};
     });
   // Done
-  console.log(result[0]);
 });
 
